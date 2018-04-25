@@ -9,28 +9,12 @@
 #include <regex>
 #include <map>
 
+using ParameterMap = std::map<std::string, std::string>;
+using CategoryMap = std::map<std::string, ParameterMap>;
 
-using std::string;
-using std::cout;
-using std::endl;
-using std::ifstream;
-using std::istringstream;
-using std::ostringstream;
-using std::istreambuf_iterator;
-using std::regex;
-using std::sregex_iterator;
-using std::regex_search;
-using std::smatch;
-using std::map;
-
-
-using parametermap = map<string, string>;
-using categorymap = map<string, parametermap>;
-
-
-const string REGEX_CATEGORY = "(\\[.*\\])([^\\[]*)";
-const string REGEX_CATEGORY_TITLE = "\\[(.*)\\]";
-const string REGEX_PARAMETERS = "([[:alnum:]]+)[\\s:=]+([[:alnum:]]+)\\n";
+const std::string REGEX_CATEGORY = "(\\[.*\\])([^\\[]*)";
+const std::string REGEX_CATEGORY_TITLE = "\\[(.*)\\]";
+const std::string REGEX_PARAMETERS = "([[:alnum:]]+)[\\s:=]+([[:alnum:]]+)\\n";
 
 
 class ConfigParser
@@ -39,18 +23,21 @@ public:
   ConfigParser();
   ~ConfigParser();
 
-  bool read(string filename);
-  bool parseString(string configString);
-  void parseParameters(string category, string paramString);
-  bool parseCategory(string category);
+  bool parseCategory(std::string category);
+  void parseParameters(std::string category, std::string paramString);
+  bool parseString(std::string configString);
+
+  bool readFile(std::string filename);
+  bool readString(std::string configString);
+
   void printConfig();
 
-  parametermap& operator[] (string key);
-
+  ParameterMap& operator[] (std::string key);
 
 private:
-  categorymap* config_;
-  string configString_;
+  CategoryMap* config_;
+  std::string configString_;
 };
+
 
 #endif /* CONFIGPARSER_H */
